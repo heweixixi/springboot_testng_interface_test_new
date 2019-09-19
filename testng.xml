@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite" thread-count="4" parallel="methods" verbose="10">
+    <test name="test" group-by-instances="true">
+        <!--<parameter name="param" value="string"/>-->
+        <!--<groups>
+            <run>
+                <include name="group1"/>
+            </run>
+        </groups>-->
+       <!-- <packages>
+            <package name="TestNGProj"></package>
+        </packages>-->
+        <classes>
+            <class name="com.example.springboot_quartz.testcase.RegisterProcess">
+            </class>
+        </classes>
+
+    </test>
+    <parameter name="filepath" value="target/test-classes/rest_info.xlsx"/>
+    <parameter name="sheetNum" value="2"/>
+    <listeners>
+        <listener class-name="org.uncommons.reportng.HTMLReporter"/>
+        <listener class-name="org.uncommons.reportng.JUnitXMLReporter"/>
+    </listeners>
+</suite>

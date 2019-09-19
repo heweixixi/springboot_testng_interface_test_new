@@ -1,0 +1,22 @@
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+    <title>文件上传</title>
+</head>
+<body>
+<div>
+    <form action="/file/upload" method="post" name="f_upload" enctype="multipart/form-data">
+        <!--<input type="text" name="username">-->
+        <input type="text" name="password">
+        <input type="file" name="multipartFiles" multiple="multiple"/>
+        <input type="submit" value="上传" />
+    </form>
+</div>
+<div>
+    <form action="/file/uploadExcel" method="post" name="f_upload2" enctype="multipart/form-data">
+        <input type="file" name="multipartFile" multiple="multiple"/>
+        <input type="submit" value="上传" />
+    </form>
+</div>
+</body>
+</html>

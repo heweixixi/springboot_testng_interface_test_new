@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.example.springboot_quartz.mapper.customer.ResultMapper">
+
+    <sql id="baseCollumn">
+        id id,
+        name name,
+        age age,
+        gender gender,
+        mobile mobile
+    </sql>
+
+
+    <select id="getStudentList" resultType="com.example.springboot_quartz.model.po.Student">
+        select
+        <include refid="baseCollumn"/>
+        from
+        student
+        where identity = #{id}
+    </select>
+
+    <select id="getMaxAgeStudent" resultType="java.lang.String">
+        select
+        max(mobile)+1 as age
+        from
+        student
+    </select>
+
+    <insert id="addStudent" parameterType="com.example.springboot_quartz.model.po.InterfaceTestPo">
+        insert into student (name,age,gender,mobile) values (#{name},#{age},#{gender},#{mobile})
+    </insert>
+
+
+    <delete id="deleteStudent">
+        delete from student where id = #{id}
+    </delete>
+
+    <select id="getStudent" resultType="com.example.springboot_quartz.model.po.InterfaceTestPo">
+        select
+        <include refid="baseCollumn"/>
+        from
+        student
+        where id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <properties resource="application.properties"/>
+
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <property name="javaFileEncoding" value="UTF-8"/>
+
+       <!-- <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+        </plugin>-->
+        <!-- 整合lombok-->
+        <plugin type="com.softwareloop.mybatis.generator.plugins.LombokPlugin" >
+            <property name="hasLombok" value="true"/>
+        </plugin>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="${spring.datasource.jdbcUrl}"
+                        userId="${spring.datasource.username}"
+                        password="${spring.datasource.password}">
+        </jdbcConnection>
+        <!--java类报名和位置-->
+        <javaModelGenerator targetPackage="com.example.springboot_quartz.model.dto" targetProject="src/main/java"/>
+        <!--映射文件包名和位置-->
+        <sqlMapGenerator targetPackage="com.example.springboot_quartz.mapper.base"  targetProject="src/main/java"/>
+        <!--dao包名和位置-->
+        <javaClientGenerator targetPackage="com.example.springboot_quartz.mapper.base" targetProject="src/main/java" type="XMLMAPPER" />
+
+        <table tableName="qrtz_%" >
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+    </context>
+<!--    mvn mybatis-generator:generate-->
+</generatorConfiguration>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.example.springboot_quartz.mapper.customer.QrtzJobDetailsSelfMapper">
+
+    <sql id="baseCollumn">
+        SCHED_NAME schedName,
+        JOB_NAME jobName,
+        JOB_GROUP jobGroup,
+        DESCRIPTION description,
+        JOB_CLASS_NAME jobClassName,
+        IS_DURABLE isDurable,
+        IS_NONCONCURRENT isNonconcurrent,
+        IS_UPDATE_DATA isUpdateData,
+        REQUESTS_RECOVERY requestsRecovery,
+        JOB_DATA jobData
+    </sql>
+
+
+    <select id="getQrtzJobDetailsMapperByNameAndGroup" resultType="com.example.springboot_quartz.model.dto.QrtzJobDetails">
+        select
+        <include refid="baseCollumn"/>
+        from
+        qrtz_job_details
+        where JOB_NAME = #{jobName} and JOB_GROUP=#{jobGroup}
+    </select>
+
+</mapper>
