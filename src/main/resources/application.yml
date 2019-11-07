@@ -25,3 +25,10 @@ spring:
       # 针对不同的网址,长连接保持的存活时间,单位s,如果是频繁而持续的请求,可以设置小一点,不建议设置过大,避免大量无用连接占用内存资源
       keepAliveTargetHost:
         www.baidu.com: 5
+
+  rabbitmq:
+    virtual-host: hewei_virtual
+    host: 127.0.0.1
+    username: guest
+    password: guest
+    port: 5672
