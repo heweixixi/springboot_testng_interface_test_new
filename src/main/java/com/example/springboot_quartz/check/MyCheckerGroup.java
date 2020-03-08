@@ -11,7 +11,7 @@ import java.util.List;
  * created by ${user} on 2019/7/26
  */
 @Service
-public class MyChecker extends AbstractCheckerGroup{
+public class MyCheckerGroup extends AbstractCheckerGroup{
 
     @Autowired
     TestChecker testChecker;
