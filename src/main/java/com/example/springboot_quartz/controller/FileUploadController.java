@@ -77,9 +77,9 @@ public class FileUploadController {
 //设置文件大小
                 response.setContentLength(outputStream.size());
 //创建Cookie并添加到response中
-                Cookie cookie = new Cookie("fileDownload", "true");
-                cookie.setPath("/");
-                response.addCookie(cookie);
+//                Cookie cookie = new Cookie("fileDownload", "true");
+//                cookie.setPath("/");
+//                response.addCookie(cookie);
 
                 outputStream.writeTo(response.getOutputStream());
                 outputStream.close();
@@ -91,7 +91,7 @@ public class FileUploadController {
 //            byte[] bytes = outByteStream.toByteArray();
 //            result.setData(bytes);
         }
-        return result;
+        return null;
     }
 
 

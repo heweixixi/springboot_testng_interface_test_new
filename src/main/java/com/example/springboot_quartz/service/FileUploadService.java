@@ -245,7 +245,7 @@ public class FileUploadService {
         firstHeadCell.setCellValue("错误原因");
         for (int i = 1; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
-            checkCell(row,buffer);
+            checkCell(row,buffer,Integer.valueOf(lastCellNum));
         }
     }
 
@@ -296,8 +296,8 @@ public class FileUploadService {
     }
 
 
-    private void checkCell(Row row,StringBuffer buffer){
-        Integer cellCount = Integer.valueOf(row.getLastCellNum());
+    private void checkCell(Row row,StringBuffer buffer,Integer cellCount){
+//        Integer cellCount = Integer.valueOf(row.getLastCellNum());
         for (int i = 0;i<cellCount;i++){
             Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
             switch (i){
