@@ -1,8 +1,10 @@
 package com.example.springboot_quartz.controller;
 
+import com.example.springboot_quartz.utils.ZipUtils;
 import com.example.springboot_quartz.resp.RESULT_STATUS;
 import com.example.springboot_quartz.resp.Result;
 import com.example.springboot_quartz.service.FileUploadService;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
+import java.util.zip.ZipOutputStream;
 
 /**
  * created by ${user} on 2019/7/29
@@ -70,6 +72,7 @@ public class FileUploadController {
                 return new Result().success(RESULT_STATUS.SUCCESS.code,"文件不能为空");
             }
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
             try {
                 workbook.write(outputStream);
                 response.setContentType("application/vnd.ms-excel;charset=utf-8");
@@ -94,6 +97,106 @@ public class FileUploadController {
         return null;
     }
 
+    @RequestMapping("/down")
+    @ResponseBody
+    public void downZip(HttpServletResponse response) throws IOException {
+        File file = null;
+        try {
+            file = new File("D:\\test2\\a.zip");
+            ZipOutputStream zo = new ZipOutputStream(new FileOutputStream(file));
+            List<File> fileList = Lists.newArrayList();
+//            fileList.add(new File("D:\\test\\test.txt"));
+//            fileList.add(new File("D:\\test\\hello.xls"));
+//            fileList.add(new File("D:\\test\\jdk8.CHM"));
+            fileList.add(new File("D:\\test\\"));
+            for (File file1 : fileList) {
+                ZipUtils.compress(file1,zo);
+            }
+            zo.flush();
+            zo.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
+        File sourceFile = file;
+        downloadFileShowPercent(response,sourceFile,sourceFile.getName());
+//        String zipPath = "D:\\test\\new.zip";
+//        File file = new File(zipPath);
+//        FileInputStream fi = new FileInputStream(sourceFile);
+//
+//        response.setContentType("application/zip");
+//        response.setHeader("content-disposition","attachment;filename="+new String(sourceFile.getName().getBytes(),"ISO8859-1"));
+//
+//
+////        OutputStream os = response.getOutputStream();
+//
+//        ZipOutputStream zo = new ZipOutputStream(response.getOutputStream());
+//        zo.putNextEntry(new ZipEntry(sourceFile.getName()));
+//        byte[] data = new byte[1024];
+//        while (fi.read(data)!=-1){
+//            zo.write(data);
+//        }
+//        zo.flush();
+//        zo.closeEntry();
+       /* byte[] buffer = new byte[1024];
+        BufferedInputStream bi = new BufferedInputStream(new FileInputStream(file));
+        while (bi.read(buffer)!=-1){
+            os.write(buffer);
+        }
+        os.flush();
+        if (os!=null){
+            os.close();
+        }*/
+//        if (bi!=null){
+//            bi.close();
+//        }
+
+//        if (zo!=null){
+//            zo.close();
+//        }
+//        if (fi!=null){
+//            fi.close();
+//        }
+    }
+
+
+
+    private void downloadFileShowPercent(HttpServletResponse response, File file,
+                                         String fileName) {
+        BufferedOutputStream bw = null;
+        FileInputStream fis = null;
+        try {
+            ServletOutputStream out = response.getOutputStream();
+            response.setContentType("application/octet-stream");
+            fileName = new String(fileName.getBytes(), "ISO8859-1");
+            response.addHeader("content-disposition", "attachment;filename=" + fileName);
+            fis = new FileInputStream(file);
+            bw = new BufferedOutputStream(out);
+            byte[] chars = new byte[1024 * 8];
+            int index = -1;
+            while ((index = fis.read(chars)) != -1) {
+                bw.write(chars, 0, index);
+            }
+            bw.flush();
+            bw.close();
+        } catch (Exception e) {
+            log.error("downloadFileShowPercent method error:" + e.getMessage(), e);
+            //下载文件的过程中出现异常，返回-1.0 控制 实时刷新方法showDownLoadPercent停止轮询请求
+//            vo.setPercent(-1.0);
+//            vo.setCount(-1);
+//            getMap().put(sessionUserBean.getSid(), vo);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    log.error("close error!", e);
+                }
+            }
+//            if (file != null) {
+//                file.delete();
+//            }
+        }
+    }
 }
