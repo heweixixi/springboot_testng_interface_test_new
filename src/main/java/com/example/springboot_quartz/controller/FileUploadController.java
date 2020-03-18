@@ -5,6 +5,7 @@ import com.example.springboot_quartz.resp.RESULT_STATUS;
 import com.example.springboot_quartz.resp.Result;
 import com.example.springboot_quartz.service.FileUploadService;
 import com.google.common.collect.Lists;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -68,33 +69,68 @@ public class FileUploadController {
         Map<String, Object> map = fileUploadService.parseExcelAndUpload(request);
         if (!StringUtils.isEmpty(map.get("buffer"))){
             Workbook workbook=(Workbook) map.get("workbook");
-            if (Objects.isNull(workbook)){
-                return new Result().success(RESULT_STATUS.SUCCESS.code,"文件不能为空");
-            }
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
             try {
                 workbook.write(outputStream);
                 response.setContentType("application/vnd.ms-excel;charset=utf-8");
                 response.addHeader("Content-Disposition", "attachment;filename=" + "测试文件");
-//设置文件大小
-                response.setContentLength(outputStream.size());
-//创建Cookie并添加到response中
-//                Cookie cookie = new Cookie("fileDownload", "true");
-//                cookie.setPath("/");
-//                response.addCookie(cookie);
-
                 outputStream.writeTo(response.getOutputStream());
                 outputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            result.setData("上传失败");
-//            return result;
-//            byte[] bytes = outByteStream.toByteArray();
-//            result.setData(bytes);
+            return null;
         }
-        return null;
+        return result;
+    }
+
+
+    /**
+     * 上传excel，并打包下载错误文件
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("uploadExcelAndDownZip")
+    @ResponseBody
+    @ApiOperation(value = "上传excel-parseExcel")
+    public Result uploadExcelAndDown(HttpServletRequest request, HttpServletResponse response){
+        Result result = new Result(RESULT_STATUS.SUCCESS.code,RESULT_STATUS.SUCCESS.msg);
+        //对文件
+        Map<String, Object> map = fileUploadService.parseExcelAndUpload(request);
+        if (!StringUtils.isEmpty(map.get("buffer"))){
+            Workbook workbook=(Workbook) map.get("workbook");
+            File error = new File("D:\\test\\error.xls");
+            File zipFile = new File("D:\\test\\error.zip");
+            try (FileOutputStream fos = new FileOutputStream(error)){
+                workbook.write(fos);
+                ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
+                ZipUtils.compress(error,zos);
+                zos.close();
+                response.setContentType("application/vnd.ms-excel;charset=utf-8");
+                response.addHeader("Content-Disposition", "attachment;filename=" + zipFile.getName());
+                try(FileInputStream fis = new FileInputStream(zipFile)){
+                    byte[] buffer = new byte[1024];
+                    BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
+                    while (fis.read(buffer)!=-1){
+                        bos.write(buffer);
+                    }
+                    bos.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (error!=null){
+                error.delete();
+            }
+            if (zipFile!=null){
+                zipFile.delete();
+            }
+            return null;
+        }
+        return result;
     }
 
     @RequestMapping("/down")
