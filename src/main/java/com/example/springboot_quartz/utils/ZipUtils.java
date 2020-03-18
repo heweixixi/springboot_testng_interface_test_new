@@ -1,12 +1,15 @@
 package com.example.springboot_quartz.utils;
 
 import java.io.*;
+import java.util.Enumeration;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class ZipUtils {
 
     public static void main(String[] args) {
+        /*
         File source = new File("D:\\test\\");
         File target = new File("D:\\test2\\new.zip");
         try {
@@ -17,6 +20,10 @@ public class ZipUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        */
+        File sourceZip = new File("D:\\test2\\new.zip");
+        String target = "D:\\test2\\";
+        upzip(sourceZip,target);
     }
 
 
@@ -38,7 +45,8 @@ public class ZipUtils {
 
         //如果目录下为空，则直接压缩空目录
         if (files.length<1){
-            ZipEntry zipEntry = new ZipEntry(dir.getName());
+            //目录记得最后一定要加/，要不然最后压缩的目录会有问题
+            ZipEntry zipEntry = new ZipEntry(dir.getName()+"/");
             zo.putNextEntry(zipEntry);
             zo.closeEntry();
         }
@@ -58,5 +66,45 @@ public class ZipUtils {
             zo.write(data);
         }
         zo.closeEntry();
+    }
+
+    //解压文件
+    public static void upzip(File file,String targetPath){
+        InputStream inputStream = null;
+        FileOutputStream fos = null;
+        try {
+            ZipFile zipFile = new ZipFile(file);
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            while (entries.hasMoreElements()){
+                ZipEntry zipEntry = entries.nextElement();
+                String fileName = zipEntry.getName();
+                if (fileName.lastIndexOf("/")!=-1){
+                    //目录
+                    File fileDir = new File(targetPath+fileName+"/");
+                    fileDir.mkdirs();
+                    continue;
+                }
+                inputStream = zipFile.getInputStream(zipEntry);
+                String targetFilePath = targetPath+fileName;
+                fos = new FileOutputStream(new File(targetFilePath));
+                byte[] data = new byte[1024];
+                while (inputStream.read(data)!=-1){
+                    fos.write(data);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (fos!=null){
+                    fos.close();
+                }
+                if (inputStream!=null){
+                    inputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
