@@ -1,5 +1,6 @@
 package com.example.springboot_quartz.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.springboot_quartz.mapper.customer.ResultMapper;
 import com.example.springboot_quartz.model.po.InterfaceTestPo;
 import com.example.springboot_quartz.model.po.Student;
@@ -8,6 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +39,8 @@ public class StudentController {
         return Result.success(HttpStatus.OK.value(),"成功");
     }
 
-    @GetMapping("/get")
-    public Result<InterfaceTestPo> getStudent(Integer id){
+    @PostMapping("/get")
+    public Result<InterfaceTestPo> getStudent(@RequestBody Integer id){
         InterfaceTestPo student = resultMapper.getStudent(id);
         return Result.success(student,HttpStatus.OK.value(),"成功");
     }

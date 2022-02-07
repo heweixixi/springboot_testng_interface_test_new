@@ -9,7 +9,6 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtils {
 
     public static void main(String[] args) {
-        /*
         File source = new File("D:\\test\\");
         File target = new File("D:\\test2\\new.zip");
         try {
@@ -20,10 +19,11 @@ public class ZipUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        */
-        File sourceZip = new File("D:\\test2\\new.zip");
+
+        //解压文件
+       /* File sourceZip = new File("D:\\test2\\new.zip");
         String target = "D:\\test2\\";
-        upzip(sourceZip,target);
+        upzip(sourceZip,target);*/
     }
 
 

@@ -5,6 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.springboot_quartz.constains.Constains;
 import com.example.springboot_quartz.model.case_po.Rest;
+import com.example.springboot_quartz.model.po.Student;
+import com.example.springboot_quartz.resp.Result;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -22,7 +26,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
@@ -272,7 +279,11 @@ public class RestUtil {
     }
 
     public static void main(String[] args) {
-        /*RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        Student student = new Student();
+        student.setName("张三");
+        student.setAge(12);
+
         String param = "{\"id\":\"310\"}";
         Gson gson = new Gson();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -283,16 +294,26 @@ public class RestUtil {
             e.printStackTrace();
         }
         HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+//        httpHeaders.add("Content-Type", "application/x-www-form-urlencoded");
+        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(student));
+        String jsonString = JSONObject.toJSONString(student);
+        MultiValueMap<String,Object> multiValueMap = new LinkedMultiValueMap<>();
+        multiValueMap.add("id",newParam);
+//        multiValueMap.add("name","张三");
+//        multiValueMap.add("paramJson",jsonString);
         log.info(newParam);
         try {
-            HttpEntity<String> httpEntity = new HttpEntity<>(param, httpHeaders);
-//            restTemplate.postForEntity("http://localhost:8081/get",httpEntity,String.class);
-            Result result =restTemplate.getForObject("http://localhost:8081/get?id=323", Result.class);
+//            HttpEntity<String> httpEntity = new HttpEntity<>(param, httpHeaders);
+//            HttpEntity httpEntity1 = new HttpEntity<>(multiValueMap,httpHeaders);
+            HttpEntity httpEntity = new HttpEntity("1",httpHeaders);
+//            ResponseEntity<Result> resultResponseEntity = restTemplate.postForEntity("http://localhost:8081/get", httpEntity1, Result.class);
+//            Result result =restTemplate.getForObject("http://localhost:8081/get?id=323", httpEntity1,Result.class);
+            Result result = restTemplate.postForObject("http://localhost:8081/get", httpEntity, Result.class);
             log.info(result.getData().toString());
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
 
         JSONArray jsonArray = JSONArray.parseArray("[{\"id\":\"328\"},{\"id\":\"11\",\"name\":\"ad\"}]");
         for (int i = 0; i < jsonArray.size(); i++) {
